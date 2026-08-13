@@ -211,17 +211,25 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, themeMode 
       {/* Main Container */}
       <div className="w-full max-w-md bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl backdrop-blur-xl p-8 relative z-10 space-y-6">
         
-        {/* Header Logo */}
+        {/* Corporate Header Logo */}
         <div className="flex flex-col items-center text-center space-y-3">
-          <HorusLogo size={64} />
-          <div>
-            <h1 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white flex items-center justify-center gap-2">
+          <HorusLogo size={68} />
+          <div className="space-y-1">
+            <h1 className="text-xl font-bold tracking-[0.14em] text-slate-900 dark:text-white uppercase font-sans">
               EYE OF HORUS
             </h1>
-            <p className="text-xs font-mono font-bold text-amber-500 dark:text-amber-400 uppercase tracking-widest mt-0.5">
-              By Cyverax Solutions
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 tracking-[0.16em] uppercase">
+                CYVERAX SECURITY
+              </span>
+              <span className="text-[10px] text-amber-500 font-bold">•</span>
+              <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold uppercase">
+                ENTERPRISE CONSOLE
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 dark:text-slate-400 pt-0.5 max-w-xs mx-auto">
+              Unified Enterprise SIEM & XDR Threat Intelligence Platform
             </p>
-            <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">Unified Cybersecurity Operations & Protection Platform</p>
           </div>
         </div>
 

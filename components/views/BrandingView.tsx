@@ -176,9 +176,9 @@ export const BrandingView: React.FC = () => {
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {[
-                  { id: 'horus-gold', name: 'Eye of Horus Cyber Gold', desc: 'Default Cyverax Platinum emblem' },
-                  { id: 'horus-neon', name: 'Eye of Horus Neon Cyan', desc: 'High-contrast neon security theme' },
-                  { id: 'custom-upload', name: 'Custom SVG / PNG Logo', desc: 'Upload or host custom company vector' },
+                  { id: 'horus-corporate', name: 'Horus Corporate Shield', desc: 'Authoritative obsidian & gold enterprise seal' },
+                  { id: 'horus-sapphire', name: 'Horus Precision Sapphire', desc: 'High-contrast sovereign cyber defense mark' },
+                  { id: 'custom-upload', name: 'Custom Enterprise SVG', desc: 'Upload or host custom organization mark' },
                 ].map((preset) => (
                   <button
                     type="button"
