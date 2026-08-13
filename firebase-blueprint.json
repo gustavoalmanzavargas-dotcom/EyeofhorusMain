@@ -1,0 +1,37 @@
+{
+  "entities": {
+    "users": {
+      "fields": {
+        "email": { "type": "string" },
+        "name": { "type": "string" },
+        "role": { "type": "string" },
+        "createdAt": { "type": "string" }
+      }
+    },
+    "agents": {
+      "fields": {
+        "name": { "type": "string" },
+        "ip": { "type": "string" },
+        "os": { "type": "string" },
+        "version": { "type": "string" },
+        "status": { "type": "string" },
+        "dateAdded": { "type": "string" },
+        "key": { "type": "string" }
+      }
+    },
+    "securityAlerts": {
+      "fields": {
+        "time": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "agentId": { "type": "string" },
+        "agentName": { "type": "string" },
+        "technique": { "type": "string" },
+        "tactic": { "type": "string" },
+        "description": { "type": "string" },
+        "level": { "type": "number" },
+        "ruleId": { "type": "string" },
+        "rule": { "type": "string" }
+      }
+    }
+  }
+}
