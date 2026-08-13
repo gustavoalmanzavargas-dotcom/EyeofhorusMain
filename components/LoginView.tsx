@@ -213,7 +213,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, themeMode 
         
         {/* Corporate Header Logo */}
         <div className="flex flex-col items-center text-center space-y-3">
-          <HorusLogo size={68} />
+          <HorusLogo size={76} />
           <div className="space-y-1">
             <h1 className="text-xl font-bold tracking-[0.14em] text-slate-900 dark:text-white uppercase font-sans">
               EYE OF HORUS
