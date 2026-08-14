@@ -454,7 +454,216 @@ export const api = {
     }));
   },
 
-  // Reset all mock/runtime data
+  // =========================================================================
+  // HORUS SEARCH & HQL ENGINE (54, 55, 56)
+  // =========================================================================
+  async executeHqlQuery(query: string): Promise<any> {
+    return handleResponse<any>(await fetch(`${API_BASE}/horus-search/hql`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query })
+    }));
+  },
+
+  async getHscEvents(params?: { search?: string; category?: string; severity?: string; limit?: number }): Promise<any[]> {
+    const q = new URLSearchParams();
+    if (params?.search) q.append('search', params.search);
+    if (params?.category) q.append('category', params.category);
+    if (params?.severity) q.append('severity', params.severity);
+    if (params?.limit) q.append('limit', String(params.limit));
+    return handleResponse<any[]>(await fetch(`${API_BASE}/horus-search/events?${q.toString()}`));
+  },
+
+  async getSavedQueries(): Promise<any[]> {
+    return handleResponse<any[]>(await fetch(`${API_BASE}/horus-search/saved-queries`));
+  },
+
+  async saveHqlQuery(queryObj: any): Promise<any> {
+    return handleResponse<any>(await fetch(`${API_BASE}/horus-search/saved-queries`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(queryObj)
+    }));
+  },
+
+  // =========================================================================
+  // HORUS TIMELINE INVESTIGATION (57)
+  // =========================================================================
+  async getTimeline(): Promise<any[]> {
+    return handleResponse<any[]>(await fetch(`${API_BASE}/timeline`));
+  },
+
+  async updateTimelineItem(id: string, updates: any): Promise<any> {
+    return handleResponse<any>(await fetch(`${API_BASE}/timeline/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates)
+    }));
+  },
+
+  async addTimelineItem(item: any): Promise<any> {
+    return handleResponse<any>(await fetch(`${API_BASE}/timeline`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(item)
+    }));
+  },
+
+  // =========================================================================
+  // ENTITY ANALYTICS & UEBA (58)
+  // =========================================================================
+  async getEntityProfiles(): Promise<any[]> {
+    return handleResponse<any[]>(await fetch(`${API_BASE}/entity-analytics`));
+  },
+
+  // =========================================================================
+  // HORUS DETECTION RULES & DETECTION-AS-CODE (59, 60, 84)
+  // =========================================================================
+  async getHorusDetectionRules(): Promise<any[]> {
+    return handleResponse<any[]>(await fetch(`${API_BASE}/horus-detections`));
+  },
+
+  async updateHorusDetectionRule(id: string, updates: any): Promise<any> {
+    return handleResponse<any>(await fetch(`${API_BASE}/horus-detections/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates)
+    }));
+  },
+
+  async createHorusDetectionRule(rule: any): Promise<any> {
+    return handleResponse<any>(await fetch(`${API_BASE}/horus-detections`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(rule)
+    }));
+  },
+
+  async testDetectionRule(id: string): Promise<{ matchedEvents: number; sampleMatches: any[] }> {
+    return handleResponse<{ matchedEvents: number; sampleMatches: any[] }>(await fetch(`${API_BASE}/horus-detections/${id}/test`, {
+      method: 'POST'
+    }));
+  },
+
+  // =========================================================================
+  // SUPPRESSION, EXCEPTIONS & FILTERING (61, 62, 63)
+  // =========================================================================
+  async getSuppressionRules(): Promise<any[]> {
+    return handleResponse<any[]>(await fetch(`${API_BASE}/suppression-rules`));
+  },
+
+  async createSuppressionRule(rule: any): Promise<any> {
+    return handleResponse<any>(await fetch(`${API_BASE}/suppression-rules`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(rule)
+    }));
+  },
+
+  async getSecurityExceptions(): Promise<any[]> {
+    return handleResponse<any[]>(await fetch(`${API_BASE}/exceptions`));
+  },
+
+  async createSecurityException(exc: any): Promise<any> {
+    return handleResponse<any>(await fetch(`${API_BASE}/exceptions`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(exc)
+    }));
+  },
+
+  async getEventFilters(): Promise<any[]> {
+    return handleResponse<any[]>(await fetch(`${API_BASE}/event-filters`));
+  },
+
+  // =========================================================================
+  // LIVE ENDPOINT QUERY (OSQUERY) (64)
+  // =========================================================================
+  async getLiveQueryPacks(): Promise<any[]> {
+    return handleResponse<any[]>(await fetch(`${API_BASE}/live-query/packs`));
+  },
+
+  async executeLiveQuery(query: string, targetAgents: string[]): Promise<any> {
+    return handleResponse<any>(await fetch(`${API_BASE}/live-query/execute`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, targetAgents })
+    }));
+  },
+
+  // =========================================================================
+  // ATTACK DISCOVERY & ML ANALYTICS (66, 67)
+  // =========================================================================
+  async getAttackDiscoveryStories(): Promise<any[]> {
+    return handleResponse<any[]>(await fetch(`${API_BASE}/attack-discovery`));
+  },
+
+  async containAttackStory(id: string): Promise<any> {
+    return handleResponse<any>(await fetch(`${API_BASE}/attack-discovery/${id}/contain`, {
+      method: 'POST'
+    }));
+  },
+
+  async getMlAnomalies(): Promise<any[]> {
+    return handleResponse<any[]>(await fetch(`${API_BASE}/ml-anomalies`));
+  },
+
+  // =========================================================================
+  // LOG DATA HEALTH & LIFECYCLE (70, 71, 72, 73, 74)
+  // =========================================================================
+  async getDataHealth(): Promise<{ sources: any[]; summary: any }> {
+    return handleResponse<{ sources: any[]; summary: any }>(await fetch(`${API_BASE}/data-health`));
+  },
+
+  async getDataLifecycles(): Promise<any[]> {
+    return handleResponse<any[]>(await fetch(`${API_BASE}/data-lifecycle`));
+  },
+
+  async parseLogWithAi(rawLog: string): Promise<any> {
+    return handleResponse<any>(await fetch(`${API_BASE}/schema/parse-log`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rawLog })
+    }));
+  },
+
+  // =========================================================================
+  // CONTENT PACKS & MARKETPLACE (85, 86)
+  // =========================================================================
+  async getContentPacks(): Promise<any[]> {
+    return handleResponse<any[]>(await fetch(`${API_BASE}/content-packs`));
+  },
+
+  async toggleContentPack(id: string, installed: boolean): Promise<any> {
+    return handleResponse<any>(await fetch(`${API_BASE}/content-packs/${id}/toggle`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ installed })
+    }));
+  },
+
+  // =========================================================================
+  // REAL-TIME WORLD ATTACK MAP & LIVE THREAT INTELLIGENCE
+  // =========================================================================
+  async getRealtimeAttacks(limit: number = 40): Promise<any[]> {
+    return handleResponse<any[]>(await fetch(`${API_BASE}/threats/realtime-attacks?limit=${limit}`));
+  },
+
+  async getThreatStats(): Promise<any> {
+    return handleResponse<any>(await fetch(`${API_BASE}/threats/stats`));
+  },
+
+  async getThreatPulse(): Promise<any> {
+    return handleResponse<any>(await fetch(`${API_BASE}/threats/pulse`));
+  },
+
+  async refreshThreatFeeds(): Promise<any> {
+    return handleResponse<any>(await fetch(`${API_BASE}/threats/refresh`, {
+      method: 'POST'
+    }));
+  },
+
+  // Reset all runtime logs and telemetry state
   async resetData(): Promise<{ success: boolean; message: string }> {
     return handleResponse<{ success: boolean; message: string }>(await fetch(`${API_BASE}/reset-data`, {
       method: 'POST'

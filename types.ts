@@ -224,3 +224,322 @@ export interface ThreatIntelHash {
   firstSeen: string;
 }
 
+// =========================================================================
+// 54 & 70. HORUS SECURITY COMMON SCHEMA (HSC) & EVENT EXPLORER
+// =========================================================================
+export interface HscEvent {
+  id: string;
+  timestamp: string;
+  event: {
+    id: string;
+    time: string;
+    category: 'authentication' | 'process' | 'network' | 'file' | 'dns' | 'cloud' | 'alert' | 'threat_intel';
+    action: string;
+    outcome: 'success' | 'failure' | 'denied' | 'blocked' | 'unknown';
+    dataset: string;
+    severity?: number;
+  };
+  organization: {
+    id: string;
+    name?: string;
+  };
+  host?: {
+    id: string;
+    name: string;
+    os: string;
+    ip: string;
+  };
+  user?: {
+    id?: string;
+    name: string;
+    domain?: string;
+    role?: string;
+    riskScore?: number;
+  };
+  process?: {
+    id?: number;
+    name: string;
+    command_line?: string;
+    parent?: string;
+    path?: string;
+  };
+  file?: {
+    name: string;
+    path: string;
+    hash?: string;
+    size?: number;
+  };
+  source?: {
+    ip: string;
+    port?: number;
+    geo?: string;
+  };
+  destination?: {
+    ip: string;
+    port?: number;
+    domain?: string;
+    geo?: string;
+  };
+  dns?: {
+    question: string;
+    answer?: string;
+  };
+  threat?: {
+    indicator?: string;
+    technique?: string;
+    tactic?: string;
+    confidence?: number;
+  };
+  risk?: {
+    score: number;
+    severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  };
+  rawJson?: string;
+}
+
+// =========================================================================
+// 55. HQL (HORUS QUERY LANGUAGE) ENGINE
+// =========================================================================
+export interface HqlSavedQuery {
+  id: string;
+  name: string;
+  description: string;
+  query: string;
+  category: string;
+  author: string;
+  lastRun?: string;
+}
+
+export interface HqlQueryResult {
+  columns: string[];
+  rows: Record<string, any>[];
+  totalHits: number;
+  executionTimeMs: number;
+  aggregations?: {
+    field: string;
+    buckets: { key: string; count: number }[];
+  }[];
+}
+
+// =========================================================================
+// 57. SECURITY TIMELINE INVESTIGATION WORKSPACE
+// =========================================================================
+export interface TimelineItem {
+  id: string;
+  timestamp: string;
+  source: 'endpoint' | 'auth' | 'network' | 'process' | 'fim' | 'cloud' | 'dns';
+  summary: string;
+  entity: string;
+  mitreTactic?: string;
+  mitreTechnique?: string;
+  severity: 'INFO' | 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  pinned: boolean;
+  notes?: string;
+  hscEvent?: HscEvent;
+}
+
+// =========================================================================
+// 58. ENTITY ANALYTICS & UEBA
+// =========================================================================
+export interface EntityRiskProfile {
+  id: string;
+  entityType: 'User' | 'Host' | 'Service' | 'Cloud Workload';
+  name: string;
+  identifier: string;
+  riskScore: number; // 0 - 100
+  riskTier: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  department?: string;
+  os?: string;
+  lastSeen: string;
+  riskContributors: {
+    reason: string;
+    points: number;
+    timestamp: string;
+    category: string;
+  }[];
+  peerComparison: {
+    peerAverage: number;
+    percentile: number;
+    anomalousActivities: string[];
+  };
+  timelineEvents: number;
+}
+
+// =========================================================================
+// 59 & 60 & 84. DETECTION RULE LIBRARY & DETECTION-AS-CODE
+// =========================================================================
+export interface HorusDetectionRule {
+  id: string;
+  ruleId: string;
+  version: string;
+  name: string;
+  author: string;
+  description: string;
+  ruleType: 'query' | 'threshold' | 'new_term' | 'sequence' | 'indicator_match' | 'behavioral' | 'ml' | 'correlation' | 'suppression';
+  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  riskScore: number;
+  confidence: number;
+  status: 'Development' | 'Testing' | 'Staging' | 'Production';
+  enabled: boolean;
+  mitre: {
+    tactic: string;
+    technique: string;
+  };
+  query: string;
+  schedule: string;
+  lookback: string;
+  threshold?: {
+    field: string;
+    count: number;
+    windowMinutes: number;
+  };
+  investigationGuide: string[];
+  responseActions: string[];
+  yamlCode?: string;
+  lastModified: string;
+}
+
+// =========================================================================
+// 61, 62 & 63. SUPPRESSION, EXCEPTIONS & EVENT FILTERING
+// =========================================================================
+export interface SuppressionRule {
+  id: string;
+  name: string;
+  field: 'user' | 'host' | 'process' | 'hash' | 'rule' | 'ip' | 'domain';
+  value: string;
+  active: boolean;
+  suppressedEventsCount: number;
+  lastSuppressed: string;
+}
+
+export interface SecurityException {
+  id: string;
+  title: string;
+  scope: 'Endpoint' | 'Detection Rule' | 'Trusted App' | 'Trusted Hash' | 'Network Excluded';
+  targetValue: string;
+  owner: string;
+  reason: string;
+  createdTime: string;
+  expiration: string;
+  status: 'Active' | 'Expired' | 'Revoked';
+}
+
+export interface EventFilterPolicy {
+  id: string;
+  name: string;
+  dataSource: string;
+  condition: string;
+  estimatedReductionGbDay: number;
+  status: 'Active' | 'Simulating' | 'Disabled';
+}
+
+// =========================================================================
+// 64. HORUS LIVE QUERY (OSQUERY ENDPOINT INTERROGATION)
+// =========================================================================
+export interface LiveQueryPack {
+  id: string;
+  name: string;
+  description: string;
+  targetCategory: 'Ransomware Triage' | 'Lateral Movement' | 'Incident Forensics' | 'Compliance & Baseline' | 'Custom';
+  sqlQuery: string;
+  defaultIntervalSeconds: number;
+}
+
+export interface LiveQueryResult {
+  id: string;
+  query: string;
+  targetAgents: string[];
+  executedAt: string;
+  status: 'Completed' | 'Running' | 'Failed';
+  rows: Record<string, any>[];
+}
+
+// =========================================================================
+// 66. HORUS ATTACK DISCOVERY (AI-DRIVEN COALESCED ATTACK STORIES)
+// =========================================================================
+export interface AttackDiscoveryStory {
+  id: string; // e.g. HD-9831
+  title: string;
+  summary: string;
+  confidence: 'CRITICAL' | 'HIGH' | 'MEDIUM';
+  riskScore: number;
+  startTime: string;
+  lastUpdate: string;
+  status: 'Active Attack' | 'Investigating' | 'Contained' | 'Closed';
+  affectedEntities: {
+    users: string[];
+    endpoints: string[];
+    servers: string[];
+    ips: string[];
+  };
+  stages: {
+    stageNumber: number;
+    tactic: string;
+    technique: string;
+    timestamp: string;
+    description: string;
+    severity: 'INFO' | 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+    source: string;
+  }[];
+  mitreCoverage: string[];
+  threatActor?: string;
+  recommendedActions: string[];
+}
+
+// =========================================================================
+// 67. MACHINE LEARNING SECURITY ANALYTICS
+// =========================================================================
+export interface MlAnomalyRecord {
+  id: string;
+  anomalyType: 'Rare Process' | 'Abnormal Login Time' | 'Data Exfiltration Spike' | 'Beaconing C2' | 'Unusual DNS Query' | 'Impossible Travel';
+  entity: string;
+  anomalyScore: number; // 0 - 100
+  baselineDescription: string;
+  observedValue: string;
+  whyUnusual: string;
+  timestamp: string;
+  confidence: number;
+}
+
+// =========================================================================
+// 73. LOG INGESTION DATA HEALTH & LIFECYCLE
+// =========================================================================
+export interface LogSourceHealth {
+  id: string;
+  name: string;
+  category: string;
+  eventsPerSec: number;
+  gbPerDay: number;
+  lastEventTime: string;
+  status: 'HEALTHY' | 'DELAYED' | 'CRITICAL';
+  parserErrors: number;
+  queueDepth: string;
+}
+
+export interface DataLifecyclePolicy {
+  tier: 'HOT' | 'WARM' | 'COLD' | 'ARCHIVE';
+  storageMedium: string;
+  retentionDays: number;
+  currentSizeGb: number;
+  searchLatency: string;
+  costMonthly: string;
+}
+
+// =========================================================================
+// 85 & 86. SECURITY CONTENT PACKS & MARKETPLACE
+// =========================================================================
+export interface SecurityContentPack {
+  id: string;
+  name: string;
+  category: 'Operating Systems' | 'Cloud & SaaS' | 'Threat Defense' | 'Compliance';
+  version: string;
+  author: string;
+  description: string;
+  rulesCount: number;
+  dashboardsCount: number;
+  playbooksCount: number;
+  installed: boolean;
+  verifiedSigned: boolean;
+}
+
+

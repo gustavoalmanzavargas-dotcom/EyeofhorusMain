@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, CheckCircle, Bell, ChevronDown, RefreshCw, AlertTriangle, Shield, Server, Bug, X, LogOut, Sun, Moon, Monitor, Globe, Activity } from 'lucide-react';
+import { Search, CheckCircle, Bell, ChevronDown, RefreshCw, AlertTriangle, Shield, Server, Bug, X, LogOut, Sun, Moon, Monitor, Globe, Activity, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { api } from '../services/api';
 
 interface HeaderProps {
   sidebarOpen: boolean;
+  onToggleSidebar?: () => void;
   onNavigate?: (view: string) => void;
   currentUser?: { email: string; name: string } | null;
   onLogout?: () => void;
@@ -13,6 +14,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ 
   sidebarOpen, 
+  onToggleSidebar,
   onNavigate, 
   currentUser, 
   onLogout,
@@ -113,12 +115,23 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className={`bg-slate-100 dark:bg-gray-950 border-b border-slate-200 dark:border-gray-800 text-slate-800 dark:text-gray-100 z-30 transition-all duration-300 ease-in-out ${sidebarOpen ? 'pl-64' : 'pl-20'} select-none`}>
-      <div className="flex items-center justify-between h-16 px-6">
+    <header className="bg-slate-100 dark:bg-gray-950 border-b border-slate-200 dark:border-gray-800 text-slate-800 dark:text-gray-100 z-30 transition-all duration-300 ease-in-out select-none">
+      <div className="flex items-center justify-between h-16 px-4 md:px-6">
         
-        {/* Left Section: Tenant Selector & Global Search */}
-        <div className="flex items-center space-x-4">
+        {/* Left Section: Sidebar Toggle, Tenant Selector & Global Search */}
+        <div className="flex items-center space-x-3 md:space-x-4">
           
+          {/* Sidebar Toggle Button */}
+          {onToggleSidebar && (
+            <button
+              onClick={onToggleSidebar}
+              title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+              className="p-2 rounded-xl bg-white dark:bg-gray-900 border border-slate-300 dark:border-gray-800 text-slate-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:border-indigo-500 transition-all shadow-2xs"
+            >
+              {sidebarOpen ? <PanelLeftClose size={16} /> : <PanelLeftOpen size={16} />}
+            </button>
+          )}
+
           {/* Tenant / Environment Dropdown */}
           <div className="relative" ref={tenantRef}>
             <button

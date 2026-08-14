@@ -3,7 +3,8 @@ import {
   Shield, BarChart2, Bug, FileCheck, Target, HardDrive, 
   Server, Users, ShieldCheck, Key, AlertTriangle, BookOpen, 
   List, Code, FileText, Download, Home, ChevronDown, ChevronRight, Settings, Wrench, Cpu, Network, Award,
-  CheckSquare, Zap, Globe, Play, Search, Bot, Layers, CheckCircle
+  CheckSquare, Zap, Globe, Play, Search, Bot, Layers, CheckCircle, Clock, ShieldAlert, Sliders, Database, Package,
+  PanelLeftClose, PanelLeftOpen, ChevronLeft
 } from 'lucide-react';
 import { HorusLogo } from './HorusLogo';
 
@@ -17,55 +18,90 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, currentView, setView }) => {
   const [openModules, setOpenModules] = useState<Record<string, boolean>>({ 
     commandSuite: true,
+    horusSearch: true,
     modules: true, 
     agents: true, 
     userManagement: false,
     settings: false
   });
 
-  const toggleModule = (module: string) => setOpenModules(prev => ({ ...prev, [module]: !prev[module] }));
+  const toggleModule = (module: string) => {
+    if (!isOpen) {
+      setIsOpen(true);
+      setOpenModules(prev => ({ ...prev, [module]: true }));
+      return;
+    }
+    setOpenModules(prev => ({ ...prev, [module]: !prev[module] }));
+  };
 
   const NavGroup = ({ title, icon, moduleKey, children }: { title: string, icon: React.ReactNode, moduleKey: string, children: React.ReactNode }) => (
     <div className="mb-2">
-        <div onClick={() => toggleModule(moduleKey)} className="flex items-center justify-between py-2 px-3.5 rounded-xl cursor-pointer text-slate-700 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-gray-800/80 hover:text-slate-900 dark:hover:text-white transition-colors">
-            <div className="flex items-center gap-2.5">
-              {icon} 
-              {isOpen && <span className="font-extrabold text-[11px] uppercase tracking-wider">{title}</span>}
-            </div>
-            {isOpen && (openModules[moduleKey] ? <ChevronDown size={14} /> : <ChevronRight size={14} />)}
+      <div 
+        onClick={() => toggleModule(moduleKey)} 
+        title={!isOpen ? title : undefined}
+        className={`flex items-center ${isOpen ? 'justify-between px-3' : 'justify-center px-0'} py-2 rounded-xl cursor-pointer text-slate-700 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-gray-800/80 hover:text-slate-900 dark:hover:text-white transition-colors group relative`}
+      >
+        <div className={`flex items-center ${isOpen ? 'gap-2.5' : 'justify-center'}`}>
+          <div className="shrink-0 flex items-center justify-center w-6 h-6">{icon}</div>
+          {isOpen && <span className="font-extrabold text-[11px] uppercase tracking-wider truncate">{title}</span>}
         </div>
-        {isOpen && openModules[moduleKey] && (
-            <div className="mt-1 ml-3.5 pl-2.5 border-l border-slate-200 dark:border-gray-800 space-y-0.5">
-                {children}
-            </div>
+        {isOpen && (openModules[moduleKey] ? <ChevronDown size={14} /> : <ChevronRight size={14} />)}
+
+        {/* Collapsed Tooltip */}
+        {!isOpen && (
+          <div className="absolute left-full ml-2 px-2.5 py-1 bg-slate-900 text-white text-xs font-semibold rounded-lg whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity z-50 shadow-xl border border-slate-700">
+            {title}
+          </div>
         )}
+      </div>
+
+      {isOpen && openModules[moduleKey] && (
+        <div className="mt-1 ml-3.5 pl-2.5 border-l border-slate-200 dark:border-gray-800 space-y-0.5">
+          {children}
+        </div>
+      )}
     </div>
   );
 
   const NavItem = ({ icon, text, viewId }: { icon: React.ReactNode, text: string, viewId: string }) => (
     <div 
       onClick={() => setView(viewId)} 
-      className={`flex items-center py-1.5 px-3 rounded-xl cursor-pointer transition-all duration-200 group ${currentView === viewId ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-semibold' : 'text-slate-600 dark:text-gray-400 hover:bg-slate-100 dark:hover:bg-gray-800/60 hover:text-slate-900 dark:hover:text-white'}`}
+      title={!isOpen ? text : undefined}
+      className={`relative flex items-center ${isOpen ? 'py-1.5 px-3' : 'py-2 px-0 justify-center'} rounded-xl cursor-pointer transition-all duration-200 group ${currentView === viewId ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-semibold' : 'text-slate-600 dark:text-gray-400 hover:bg-slate-100 dark:hover:bg-gray-800/60 hover:text-slate-900 dark:hover:text-white'}`}
     >
-      <span className={currentView === viewId ? 'text-white' : 'text-slate-400 dark:text-gray-400 group-hover:text-slate-900 dark:group-hover:text-white'}>{icon}</span> 
+      <span className={`shrink-0 flex items-center justify-center w-5 h-5 ${currentView === viewId ? 'text-white' : 'text-slate-400 dark:text-gray-400 group-hover:text-slate-900 dark:group-hover:text-white'}`}>
+        {icon}
+      </span> 
       {isOpen && <span className="ml-2.5 text-xs tracking-tight truncate">{text}</span>}
+
+      {/* Floating Tooltip when Sidebar is Collapsed */}
+      {!isOpen && (
+        <div className="absolute left-full ml-3.5 px-3 py-1.5 bg-slate-900 dark:bg-slate-800 text-white text-xs font-medium rounded-lg whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-150 z-50 shadow-2xl border border-slate-700/80">
+          {text}
+        </div>
+      )}
     </div>
   );
 
   return (
     <div className={`bg-white dark:bg-gray-950 text-slate-900 dark:text-white border-r border-slate-200 dark:border-gray-800/80 transition-all duration-300 ease-in-out ${isOpen ? 'w-64' : 'w-20'} h-screen flex flex-col fixed top-0 left-0 z-40 shadow-xl dark:shadow-2xl select-none`}>
-      {/* Brand Header */}
-      <div className="flex items-center justify-between h-16 px-3.5 border-b border-slate-200 dark:border-gray-800/80 shrink-0">
-        <div className={`flex items-center ${!isOpen && 'justify-center w-full'}`}>
-          <HorusLogo size={40} showText={isOpen} />
+      {/* Brand Header & Main Collapse Button */}
+      <div className={`flex items-center ${isOpen ? 'justify-between px-3.5' : 'justify-center px-2'} h-16 border-b border-slate-200 dark:border-gray-800/80 shrink-0`}>
+        <div className="flex items-center overflow-hidden cursor-pointer" onClick={() => setView('dashboard')}>
+          <HorusLogo size={36} showText={isOpen} />
         </div>
-        <button onClick={() => setIsOpen(!isOpen)} className="lg:hidden p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-gray-800 text-slate-400 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white">
-          {isOpen ? <ChevronRight className="transform -rotate-180" size={18} /> : <ChevronRight size={18} />}
+
+        <button 
+          onClick={() => setIsOpen(!isOpen)} 
+          title={isOpen ? 'Collapse Sidebar (Click to minimize)' : 'Expand Sidebar'}
+          className={`p-1.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-gray-800 text-slate-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all ${!isOpen ? 'hidden' : 'flex items-center'}`}
+        >
+          <PanelLeftClose size={16} />
         </button>
       </div>
       
       {/* Navigation Links */}
-      <nav className="flex-1 px-3 py-3 space-y-1 overflow-y-auto custom-scrollbar">
+      <nav className={`flex-1 ${isOpen ? 'px-3' : 'px-2'} py-3 space-y-1 overflow-y-auto custom-scrollbar`}>
         <NavItem icon={<Home size={16} />} text="HORUS COMMAND" viewId="dashboard" />
         
         {/* HORUS XDR SUITE GROUP */}
@@ -79,6 +115,20 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, currentView, setVi
             <NavItem icon={<Globe size={15} className="text-blue-400" />} text="HORUS INTELLIGENCE" viewId="intelligence" />
             <NavItem icon={<CheckCircle size={15} className="text-emerald-400" />} text="HORUS COMPLIANCE" viewId="compliance" />
             <NavItem icon={<Bot size={15} className="text-indigo-400" />} text="HORUS ORACLE AI" viewId="oracle" />
+        </NavGroup>
+
+        {/* ELASTIC-CLASS HORUS SEARCH & ANALYTICS */}
+        <NavGroup title="SEARCH & ANALYTICS" icon={<Search size={16} className="text-indigo-400" />} moduleKey="horusSearch">
+            <NavItem icon={<Search size={15} className="text-indigo-400" />} text="Horus Search & HQL" viewId="horusSearch" />
+            <NavItem icon={<Clock size={15} className="text-cyan-400" />} text="Investigation Timeline" viewId="horusTimeline" />
+            <NavItem icon={<ShieldAlert size={15} className="text-red-400" />} text="Attack Discovery & ML" viewId="horusAttackDiscovery" />
+            <NavItem icon={<Users size={15} className="text-purple-400" />} text="Entity Analytics & UEBA" viewId="horusEntityAnalytics" />
+            <NavItem icon={<Cpu size={15} className="text-emerald-400" />} text="Live Query (Osquery)" viewId="horusLiveQuery" />
+            <NavItem icon={<Wrench size={15} className="text-amber-400" />} text="Detections & Code" viewId="horusDetections" />
+            <NavItem icon={<Sliders size={15} className="text-blue-400" />} text="Suppression & Filters" viewId="horusSuppression" />
+            <NavItem icon={<BarChart2 size={15} className="text-pink-400" />} text="Horus Visualize" viewId="horusVisualize" />
+            <NavItem icon={<Database size={15} className="text-teal-400" />} text="Data Health & Schema" viewId="horusDataPlatform" />
+            <NavItem icon={<Package size={15} className="text-orange-400" />} text="Content Marketplace" viewId="horusContentPacks" />
         </NavGroup>
 
         <NavGroup title="SECURITY MODULES" icon={<Layers size={16} />} moduleKey="modules">
@@ -118,6 +168,27 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, currentView, setVi
             <NavItem icon={<Download size={15} />} text="API Keys" viewId="api" />
         </NavGroup>
       </nav>
+
+      {/* Bottom Sticky Collapse / Expand Toggle Button */}
+      <div className="p-2 border-t border-slate-200 dark:border-gray-800/80 shrink-0 bg-slate-50/50 dark:bg-slate-900/30">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          title={isOpen ? "Collapse Sidebar" : "Expand Sidebar"}
+          className={`w-full flex items-center ${isOpen ? 'justify-between px-3' : 'justify-center px-0'} py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:border-indigo-300 dark:hover:border-indigo-700 transition-all text-xs font-semibold shadow-2xs group`}
+        >
+          {isOpen ? (
+            <>
+              <span className="flex items-center gap-2">
+                <PanelLeftClose size={15} className="text-indigo-500" />
+                <span>Collapse Sidebar</span>
+              </span>
+              <ChevronLeft size={14} className="text-slate-400 group-hover:-translate-x-0.5 transition-transform" />
+            </>
+          ) : (
+            <PanelLeftOpen size={18} className="text-indigo-500 group-hover:scale-110 transition-transform" />
+          )}
+        </button>
+      </div>
     </div>
   );
 };

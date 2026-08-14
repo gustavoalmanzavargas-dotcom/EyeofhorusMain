@@ -23,14 +23,37 @@ import IntegrationsView from './components/views/IntegrationsView';
 import MyAccountView from './components/views/MyAccountView';
 import BrandingView from './components/views/BrandingView';
 
+// Elastic-Class Horus Search & Analytics Suite
+import { HorusSearchView } from './components/views/HorusSearchView';
+import { HorusTimelineView } from './components/views/HorusTimelineView';
+import { HorusAttackDiscoveryView } from './components/views/HorusAttackDiscoveryView';
+import { HorusEntityAnalyticsView } from './components/views/HorusEntityAnalyticsView';
+import { HorusLiveQueryView } from './components/views/HorusLiveQueryView';
+import { HorusDetectionsView } from './components/views/HorusDetectionsView';
+import { HorusSuppressionView } from './components/views/HorusSuppressionView';
+import { HorusVisualizeView } from './components/views/HorusVisualizeView';
+import { HorusDataPlatformView } from './components/views/HorusDataPlatformView';
+import { HorusContentPacksView } from './components/views/HorusContentPacksView';
+
 import { api } from './services/api';
 import { auth, onAuthStateChanged, signOut } from './services/firebase';
 import { DashboardData } from './types';
 
 export default function App() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(() => {
+    const saved = localStorage.getItem('eoh_sidebar_open');
+    return saved !== null ? saved === 'true' : true;
+  });
   const [currentView, setCurrentView] = useState('dashboard');
   const [selectedAgent, setSelectedAgent] = useState<any>(null);
+
+  const handleToggleSidebar = (newState?: boolean) => {
+    setSidebarOpen(prev => {
+      const next = typeof newState === 'boolean' ? newState : !prev;
+      localStorage.setItem('eoh_sidebar_open', String(next));
+      return next;
+    });
+  };
   
   const [data, setData] = useState<Record<string, any>>({});
   const [isLoading, setIsLoading] = useState(true);
@@ -233,6 +256,28 @@ export default function App() {
         return <HorusComplianceView />;
       case 'intelligence':
         return <WebrootShieldView onRefresh={reloadData} />;
+
+      // ELASTIC-CLASS HORUS SEARCH & ANALYTICS VIEWS
+      case 'horusSearch':
+        return <HorusSearchView />;
+      case 'horusTimeline':
+        return <HorusTimelineView />;
+      case 'horusAttackDiscovery':
+        return <HorusAttackDiscoveryView />;
+      case 'horusEntityAnalytics':
+        return <HorusEntityAnalyticsView />;
+      case 'horusLiveQuery':
+        return <HorusLiveQueryView />;
+      case 'horusDetections':
+        return <HorusDetectionsView />;
+      case 'horusSuppression':
+        return <HorusSuppressionView />;
+      case 'horusVisualize':
+        return <HorusVisualizeView />;
+      case 'horusDataPlatform':
+        return <HorusDataPlatformView />;
+      case 'horusContentPacks':
+        return <HorusContentPacksView />;
       case 'securityEvents':
         return <SecurityEventsView data={data.securityEvents || []} onRefresh={reloadData} />;
       case 'vulnerabilities':
@@ -288,7 +333,7 @@ export default function App() {
     <div className="flex h-screen bg-slate-50 dark:bg-gray-950 text-slate-900 dark:text-gray-100 font-sans overflow-hidden">
       <Sidebar 
         isOpen={sidebarOpen} 
-        setIsOpen={setSidebarOpen} 
+        setIsOpen={handleToggleSidebar} 
         currentView={currentView} 
         setView={(v) => {
           if (v !== 'inventory') setSelectedAgent(null);
@@ -298,6 +343,7 @@ export default function App() {
       <div className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${sidebarOpen ? 'ml-64' : 'ml-20'} h-full`}>
         <Header 
           sidebarOpen={sidebarOpen} 
+          onToggleSidebar={() => handleToggleSidebar()}
           onNavigate={(v) => setCurrentView(v)} 
           currentUser={currentUser} 
           onLogout={handleLogout}

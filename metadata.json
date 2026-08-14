@@ -1,6 +1,6 @@
 {
   "name": "Eye of Horus",
-  "description": "A comprehensive cybersecurity threat hunting and security monitoring dashboard featuring real-time alerts, agent management, and system inventory analysis.",
+  "description": "A comprehensive cybersecurity threat hunting and security monitoring dashboard featuring real-time world attack map with live threat intelligence feeds, alerts, agent management, and analytics.",
   "requestFramePermissions": [],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"

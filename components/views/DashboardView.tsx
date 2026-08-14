@@ -4,9 +4,10 @@ import {
   ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell, 
   RadialBarChart, RadialBar, PolarAngleAxis 
 } from 'recharts';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, Radio } from 'lucide-react';
 import { Card, PageHeader } from '../UI';
 import { Table } from '../Table';
+import { WorldAttackMap } from '../WorldAttackMap';
 import { getAlertLevelColor, MITRE_COLORS, AGENT_COLORS } from '../../constants';
 import { DashboardData, Alert } from '../../types';
 
@@ -16,6 +17,23 @@ interface DashboardViewProps {
 }
 
 const DashboardView: React.FC<DashboardViewProps> = ({ data, onRefresh }) => {
+    const [isDarkMode, setIsDarkMode] = React.useState<boolean>(() => {
+        if (typeof document !== 'undefined') {
+            return document.documentElement.classList.contains('dark');
+        }
+        return true;
+    });
+
+    React.useEffect(() => {
+        const updateTheme = () => {
+            setIsDarkMode(document.documentElement.classList.contains('dark'));
+        };
+        updateTheme();
+        const observer = new MutationObserver(updateTheme);
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+        return () => observer.disconnect();
+    }, []);
+
     const StatCard = ({ title, value, color }: { title: string, value: number, color: string }) => (
         <div className="text-center py-2">
           <p className="text-xs text-slate-500 dark:text-gray-400 uppercase tracking-wider mb-1 font-bold">{title}</p>
@@ -25,16 +43,19 @@ const DashboardView: React.FC<DashboardViewProps> = ({ data, onRefresh }) => {
     
     return (
         <div className="p-8 space-y-8">
-            <PageHeader title="Threat Hunting Dashboard">
+            <PageHeader title="HORUS COMMAND — Threat Hunting & Global Security Operations">
                 {onRefresh && (
                     <button 
                         onClick={onRefresh}
                         className="bg-white dark:bg-gray-800 hover:bg-slate-100 dark:hover:bg-gray-700 text-slate-700 dark:text-gray-200 border border-slate-300 dark:border-gray-700 font-bold py-2 px-4 rounded-xl flex items-center text-xs shadow-xs transition-all"
                     >
-                        <RefreshCw size={14} className="mr-2" /> Refresh Data
+                        <RefreshCw size={14} className="mr-2" /> Refresh Dashboard Data
                     </button>
                 )}
             </PageHeader>
+
+            {/* REAL-TIME WORLD ATTACK MAP WITH LIVE THREAT INTELLIGENCE */}
+            <WorldAttackMap />
             
             <Card className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-200 dark:divide-gray-800">
                 <StatCard title="Total Alerts" value={data?.stats?.totalAlerts} color="text-indigo-600 dark:text-indigo-400" />
@@ -51,8 +72,14 @@ const DashboardView: React.FC<DashboardViewProps> = ({ data, onRefresh }) => {
                             <XAxis dataKey="name" stroke="#64748b" tick={{fontSize: 12}} />
                             <YAxis stroke="#64748b" tick={{fontSize: 12}} />
                             <Tooltip 
-                                contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#fff', borderRadius: '12px' }} 
-                                itemStyle={{ color: '#fff' }}
+                                contentStyle={{ 
+                                    backgroundColor: isDarkMode ? '#1e293b' : '#ffffff', 
+                                    borderColor: isDarkMode ? '#334155' : '#e2e8f0', 
+                                    color: isDarkMode ? '#fff' : '#0f172a', 
+                                    borderRadius: '12px',
+                                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                                }} 
+                                itemStyle={{ color: isDarkMode ? '#fff' : '#0f172a' }}
                             />
                             <Line type="monotone" dataKey="count" stroke="#6366f1" strokeWidth={3} dot={{ r: 4, fill: '#6366f1', strokeWidth: 0 }} activeDot={{ r: 6, fill: '#4f46e5' }} />
                         </LineChart>
@@ -72,7 +99,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ data, onRefresh }) => {
                             endAngle={-270}
                         >
                             <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />
-                            <RadialBar background={{ fill: '#e2e8f0' }} dataKey='value' angleAxisId={0} cornerRadius={10}>
+                            <RadialBar background={{ fill: isDarkMode ? '#1e293b' : '#f1f5f9' }} dataKey='value' angleAxisId={0} cornerRadius={10}>
                                 {data?.mitreAttck?.map((entry, index) => (
                                     <Cell key={`cell-${index}`} fill={MITRE_COLORS[index % MITRE_COLORS.length]} />
                                 ))}
@@ -110,7 +137,13 @@ const DashboardView: React.FC<DashboardViewProps> = ({ data, onRefresh }) => {
                                 ))}
                             </Pie>
                              <Legend iconSize={10} layout="vertical" verticalAlign="middle" align="right" wrapperStyle={{color: '#64748b', fontSize: '12px'}} />
-                             <Tooltip contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#fff', borderRadius: '12px' }} />
+                             <Tooltip contentStyle={{ 
+                                 backgroundColor: isDarkMode ? '#1e293b' : '#ffffff', 
+                                 borderColor: isDarkMode ? '#334155' : '#e2e8f0', 
+                                 color: isDarkMode ? '#fff' : '#0f172a', 
+                                 borderRadius: '12px',
+                                 boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                             }} itemStyle={{ color: isDarkMode ? '#fff' : '#0f172a' }} />
                         </PieChart>
                     </ResponsiveContainer>
                 </Card>
@@ -121,7 +154,13 @@ const DashboardView: React.FC<DashboardViewProps> = ({ data, onRefresh }) => {
                             <CartesianGrid strokeDasharray="3 3" stroke="#cbd5e1" className="dark:stroke-gray-800" vertical={false} />
                             <XAxis dataKey="name" stroke="#64748b" tick={{fontSize: 12}} />
                             <YAxis stroke="#64748b" tick={{fontSize: 12}} />
-                            <Tooltip contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#fff', borderRadius: '12px' }} cursor={{fill: '#cbd5e1', opacity: 0.4}} />
+                            <Tooltip contentStyle={{ 
+                                backgroundColor: isDarkMode ? '#1e293b' : '#ffffff', 
+                                borderColor: isDarkMode ? '#334155' : '#e2e8f0', 
+                                color: isDarkMode ? '#fff' : '#0f172a', 
+                                borderRadius: '12px',
+                                boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                            }} itemStyle={{ color: isDarkMode ? '#fff' : '#0f172a' }} cursor={{fill: isDarkMode ? '#334155' : '#cbd5e1', opacity: 0.4}} />
                             <Legend wrapperStyle={{color: '#64748b', fontSize: '12px', paddingTop: '10px'}} />
                              {data?.topAgents?.map((agent, index) => (
                                 <Bar key={agent.name} dataKey={agent.name} stackId="a" fill={AGENT_COLORS[index % AGENT_COLORS.length]} radius={[4, 4, 0, 0]} />
