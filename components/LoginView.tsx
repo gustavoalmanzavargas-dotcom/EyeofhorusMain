@@ -34,8 +34,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, themeMode 
     setError(null);
     setLoading(true);
 
-    const operatorEmail = email || 'gustavo.almanza@cyverax.com';
-    const operatorName = displayName.trim() || (operatorEmail.toLowerCase().includes('gustavo') ? 'Gustavo Almanza' : operatorEmail.split('@')[0]);
+    const operatorEmail = email || 'operator@cyverax.com';
+    const operatorName = displayName.trim() || (email ? email.split('@')[0] : 'Security Operator');
 
     try {
       if (isSignUp) {
@@ -110,24 +110,24 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, themeMode 
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
       onLoginSuccess({
-        email: user.email || 'gustavo.almanza@cyverax.com',
-        name: user.displayName || 'Gustavo Almanza',
+        email: user.email || 'operator@cyverax.com',
+        name: user.displayName || 'Security Operator',
         uid: user.uid
       });
     } catch (err: any) {
       console.warn('Google Auth error handled gracefully:', err);
       if (err.code === 'auth/operation-not-allowed' || err.code === 'auth/popup-blocked' || err.code === 'auth/unauthorized-domain' || err.message?.includes('operation-not-allowed')) {
         onLoginSuccess({
-          email: 'gustavo.almanza@cyverax.com',
-          name: 'Gustavo Almanza (Google Workspace)',
+          email: 'operator@cyverax.com',
+          name: 'Google Workspace Operator',
           uid: 'google-workspace-uid'
         });
         return;
       }
       if (err.code !== 'auth/popup-closed-by-user') {
         onLoginSuccess({
-          email: 'gustavo.almanza@cyverax.com',
-          name: 'Gustavo Almanza (Google Workspace)',
+          email: 'operator@cyverax.com',
+          name: 'Google Workspace Operator',
           uid: 'google-workspace-uid'
         });
       }
@@ -139,14 +139,15 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, themeMode 
   const handleQuickAdminLogin = async () => {
     setLoading(true);
     setError(null);
-    const adminEmail = 'gustavo.almanza@cyverax.com';
-    const adminPass = 'Gusgus24!154914';
+    const adminEmail = 'admin@cyverax.com';
+    const adminPass = 'CyveraxSec2026!';
     try {
       try {
         const userCredential = await signInWithEmailAndPassword(auth, adminEmail, adminPass);
+        const name = userCredential.user.displayName || 'Security Administrator';
         onLoginSuccess({
           email: userCredential.user.email || adminEmail,
-          name: 'Gustavo Almanza',
+          name,
           uid: userCredential.user.uid
         });
         return;
@@ -154,15 +155,15 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, themeMode 
         if (e.code === 'auth/operation-not-allowed' || e.message?.includes('operation-not-allowed')) {
           onLoginSuccess({
             email: adminEmail,
-            name: 'Gustavo Almanza',
-            uid: 'admin-gustavo-uid'
+            name: 'Security Administrator',
+            uid: 'admin-sec-uid'
           });
           return;
         }
         const userCredential = await createUserWithEmailAndPassword(auth, adminEmail, adminPass);
         onLoginSuccess({
           email: userCredential.user.email || adminEmail,
-          name: 'Gustavo Almanza',
+          name: 'Security Administrator',
           uid: userCredential.user.uid
         });
       }
@@ -170,8 +171,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, themeMode 
       console.warn('Quick admin auth fallback handled:', err);
       onLoginSuccess({
         email: adminEmail,
-        name: 'Gustavo Almanza',
-        uid: 'admin-gustavo-uid'
+        name: 'Security Administrator',
+        uid: 'admin-sec-uid'
       });
     } finally {
       setLoading(false);
@@ -271,7 +272,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, themeMode 
                   required
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
-                  placeholder="e.g. Gustavo Almanza"
+                  placeholder="e.g. SOC Analyst"
                   className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
                 />
               </div>
@@ -287,7 +288,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, themeMode 
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="gustavo.almanza@cyverax.com"
+                placeholder="operator@company.com"
                 className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
               />
             </div>
@@ -354,7 +355,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, themeMode 
             className="w-full bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 font-bold py-2.5 px-4 rounded-xl flex items-center justify-center text-xs transition-all hover:scale-[1.01]"
           >
             <Sparkles size={14} className="mr-2 text-amber-500 dark:text-amber-400" />
-            Quick Admin Access (Gustavo Almanza)
+            Quick Administrator Sign In
           </button>
         </div>
 

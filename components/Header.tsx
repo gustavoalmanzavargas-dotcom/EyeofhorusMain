@@ -42,10 +42,10 @@ export const Header: React.FC<HeaderProps> = ({
 
   const userInitials = currentUser?.name
     ? currentUser.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()
-    : 'GA';
+    : (currentUser?.email ? currentUser.email.substring(0, 2).toUpperCase() : 'OP');
 
-  const userName = currentUser?.name || 'Gustavo Almanza';
-  const userEmail = currentUser?.email || 'gustavo.almanza@cyverax.com';
+  const userName = currentUser?.name || (currentUser?.email ? currentUser.email.split('@')[0] : 'Security Operator');
+  const userEmail = currentUser?.email || 'operator@cyverax.com';
 
   // Close dropdowns when clicking outside
   useEffect(() => {

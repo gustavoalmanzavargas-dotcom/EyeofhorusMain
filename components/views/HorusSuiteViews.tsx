@@ -214,7 +214,7 @@ export const HorusSocQueueView: React.FC = () => {
 
   const [title, setTitle] = useState('');
   const [priority, setPriority] = useState('CRITICAL');
-  const [owner, setOwner] = useState('Gustavo Almanza');
+  const [owner, setOwner] = useState('Lead SOC Analyst');
   const [description, setDescription] = useState('');
 
   const loadCases = async () => {
@@ -358,7 +358,7 @@ export const HorusSocQueueView: React.FC = () => {
                 required
                 value={owner}
                 onChange={(e) => setOwner(e.target.value)}
-                placeholder="e.g. Gustavo Almanza"
+                placeholder="e.g. Lead SOC Analyst"
                 className="w-full bg-slate-50 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-xl px-3.5 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-indigo-500"
               />
             </div>

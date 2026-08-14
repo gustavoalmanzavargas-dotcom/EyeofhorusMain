@@ -7,8 +7,8 @@ interface MyAccountViewProps {
 }
 
 export const MyAccountView: React.FC<MyAccountViewProps> = ({ currentUser }) => {
-  const name = currentUser?.name || 'Gustavo Almanza';
-  const email = currentUser?.email || 'gustavo.almanza@cyverax.com';
+  const name = currentUser?.name || (currentUser?.email ? currentUser.email.split('@')[0] : 'Security Operator');
+  const email = currentUser?.email || 'operator@cyverax.com';
 
   return (
     <div className="p-8 space-y-8 max-w-6xl mx-auto">

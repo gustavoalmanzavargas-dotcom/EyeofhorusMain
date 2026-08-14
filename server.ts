@@ -224,7 +224,7 @@ let systemConfig = {
   webhookUrl: '',
   webhookEnabled: false,
   emailNotifications: false,
-  adminEmail: 'gustavo.almanza@cyverax.com'
+  adminEmail: 'admin@cyverax.com'
 };
 
 let apiKeys: any[] = [];
@@ -252,7 +252,7 @@ let integrationsConfig = {
   },
   jira: {
     siteUrl: 'https://cyverax-sec.atlassian.net',
-    userEmail: 'gustavo.almanza@cyverax.com',
+    userEmail: 'security-ops@cyverax.com',
     apiToken: '••••••••••••••••••••••••••••••••',
     projectKey: 'SEC',
     issueType: 'Incident',

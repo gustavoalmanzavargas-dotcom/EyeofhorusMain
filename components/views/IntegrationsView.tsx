@@ -40,7 +40,7 @@ export const IntegrationsView: React.FC = () => {
   // Jira State
   const [jiraConfig, setJiraConfig] = useState({
     siteUrl: 'https://cyverax-sec.atlassian.net',
-    userEmail: 'gustavo.almanza@cyverax.com',
+    userEmail: 'security-ops@cyverax.com',
     apiToken: '••••••••••••••••••••••••••••••••',
     projectKey: 'SEC',
     issueType: 'Incident',
