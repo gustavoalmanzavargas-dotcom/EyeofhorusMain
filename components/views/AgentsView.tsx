@@ -50,13 +50,12 @@ const AgentCreationModal: React.FC<{
     const getInstallCommand = () => {
         if (!createdAgent) return '';
         const origin = window.location.origin;
-        const host = window.location.host;
         const key = createdAgent.key || 'eoh_reg_live';
 
         if (os.toLowerCase().includes('windows')) {
-            return `Invoke-WebRequest -Uri "${origin}/api/agent-installer.ps1" -OutFile "eoh-agent.ps1"; .\\eoh-agent.ps1 -Server "${host}" -RegistrationKey "${key}"`;
+            return `Invoke-WebRequest -Uri "${origin}/api/agent-installer.ps1" -OutFile "eoh-agent.ps1"; .\\eoh-agent.ps1 -Server "${origin}" -RegistrationKey "${key}"`;
         }
-        return `curl -sSL ${origin}/api/agent-installer.sh | sudo EOH_KEY="${key}" EOH_SERVER="${host}" bash`;
+        return `curl -sSL ${origin}/api/agent-installer.sh | sudo EOH_KEY="${key}" EOH_SERVER="${origin}" bash`;
     };
 
     const copyCommand = () => {

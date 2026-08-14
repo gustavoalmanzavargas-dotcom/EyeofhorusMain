@@ -1,0 +1,327 @@
+{
+  "001": {
+    "hardware": [
+      {
+        "type": "CPU",
+        "name": "Virtual Processor @ 2.80GHz",
+        "cores": 4,
+        "threads": 8,
+        "total": "2.8GHz",
+        "used": "18%"
+      },
+      {
+        "type": "RAM",
+        "name": "System Memory",
+        "cores": "-",
+        "threads": "-",
+        "total": "16GB",
+        "used": "4.8GB"
+      },
+      {
+        "type": "Disk",
+        "name": "/dev/sda1",
+        "cores": "-",
+        "threads": "-",
+        "total": "250GB",
+        "used": "45GB"
+      }
+    ],
+    "network": [
+      {
+        "interface": "eth0",
+        "type": "ethernet",
+        "address": "192.168.1.100",
+        "mac": "02:42:ac:11:00:02",
+        "gateway": "192.168.1.1"
+      }
+    ],
+    "packages": [
+      {
+        "name": "eyeofhorus-agent",
+        "version": "4.4.1",
+        "vendor": "EyeOfHorus"
+      },
+      {
+        "name": "openssh-server",
+        "version": "1:8.9p1-3ubuntu0.1",
+        "vendor": "Canonical"
+      }
+    ],
+    "processes": [
+      {
+        "pid": "1",
+        "name": "systemd",
+        "state": "sleeping",
+        "user": "root",
+        "priority": "20"
+      },
+      {
+        "pid": "204",
+        "name": "eoh-agentd",
+        "state": "running",
+        "user": "root",
+        "priority": "15"
+      }
+    ]
+  },
+  "002": {
+    "hardware": [
+      {
+        "type": "CPU",
+        "name": "Virtual Processor @ 2.80GHz",
+        "cores": 4,
+        "threads": 8,
+        "total": "2.8GHz",
+        "used": "18%"
+      },
+      {
+        "type": "RAM",
+        "name": "System Memory",
+        "cores": "-",
+        "threads": "-",
+        "total": "16GB",
+        "used": "4.8GB"
+      },
+      {
+        "type": "Disk",
+        "name": "/dev/sda1",
+        "cores": "-",
+        "threads": "-",
+        "total": "250GB",
+        "used": "45GB"
+      }
+    ],
+    "network": [
+      {
+        "interface": "eth0",
+        "type": "ethernet",
+        "address": "192.168.1.10",
+        "mac": "02:42:ac:11:00:02",
+        "gateway": "192.168.1.1"
+      }
+    ],
+    "packages": [
+      {
+        "name": "eyeofhorus-agent",
+        "version": "4.4.1",
+        "vendor": "EyeOfHorus"
+      },
+      {
+        "name": "openssh-server",
+        "version": "1:8.9p1-3ubuntu0.1",
+        "vendor": "Canonical"
+      }
+    ],
+    "processes": [
+      {
+        "pid": "1",
+        "name": "systemd",
+        "state": "sleeping",
+        "user": "root",
+        "priority": "20"
+      },
+      {
+        "pid": "204",
+        "name": "eoh-agentd",
+        "state": "running",
+        "user": "root",
+        "priority": "15"
+      }
+    ]
+  },
+  "003": {
+    "hardware": [
+      {
+        "type": "CPU",
+        "name": "Virtual Processor @ 2.80GHz",
+        "cores": 4,
+        "threads": 8,
+        "total": "2.8GHz",
+        "used": "18%"
+      },
+      {
+        "type": "RAM",
+        "name": "System Memory",
+        "cores": "-",
+        "threads": "-",
+        "total": "16GB",
+        "used": "4.8GB"
+      },
+      {
+        "type": "Disk",
+        "name": "/dev/sda1",
+        "cores": "-",
+        "threads": "-",
+        "total": "250GB",
+        "used": "45GB"
+      }
+    ],
+    "network": [
+      {
+        "interface": "eth0",
+        "type": "ethernet",
+        "address": "192.168.1.145",
+        "mac": "02:42:ac:11:00:02",
+        "gateway": "192.168.1.1"
+      }
+    ],
+    "packages": [
+      {
+        "name": "eyeofhorus-agent",
+        "version": "4.4.1",
+        "vendor": "EyeOfHorus"
+      },
+      {
+        "name": "openssh-server",
+        "version": "1:8.9p1-3ubuntu0.1",
+        "vendor": "Canonical"
+      }
+    ],
+    "processes": [
+      {
+        "pid": "1",
+        "name": "systemd",
+        "state": "sleeping",
+        "user": "root",
+        "priority": "20"
+      },
+      {
+        "pid": "204",
+        "name": "eoh-agentd",
+        "state": "running",
+        "user": "root",
+        "priority": "15"
+      }
+    ]
+  },
+  "004": {
+    "hardware": [
+      {
+        "type": "CPU",
+        "name": "System CPU",
+        "cores": 8,
+        "threads": 16,
+        "total": "8 Cores",
+        "used": "14%"
+      },
+      {
+        "type": "RAM",
+        "name": "System RAM",
+        "cores": "-",
+        "threads": "-",
+        "total": "32GB",
+        "used": "3.2GB"
+      },
+      {
+        "type": "Disk",
+        "name": "Primary Storage",
+        "cores": "-",
+        "threads": "-",
+        "total": "1TB",
+        "used": "52GB"
+      }
+    ],
+    "network": [
+      {
+        "interface": "eth0 / en0",
+        "type": "ethernet",
+        "address": "192.168.1.88",
+        "mac": "02:42:ac:11:00:02",
+        "gateway": "192.168.1.1"
+      }
+    ],
+    "packages": [
+      {
+        "name": "eyeofhorus-agent",
+        "version": "4.4.1",
+        "vendor": "EyeOfHorus"
+      },
+      {
+        "name": "security-telemetry-daemon",
+        "version": "1.2.0",
+        "vendor": "EyeOfHorus"
+      }
+    ],
+    "processes": [
+      {
+        "pid": "1",
+        "name": "init / systemd",
+        "state": "sleeping",
+        "user": "root",
+        "priority": "20"
+      },
+      {
+        "pid": "412",
+        "name": "eoh-agentd",
+        "state": "running",
+        "user": "system",
+        "priority": "15"
+      }
+    ],
+    "securityPosture": {
+      "lastScanTime": "2026-08-14 19:37:21",
+      "status": "Scanned",
+      "cisScore": "94% Compliant",
+      "openPorts": [
+        "22/tcp (SSH)",
+        "80/tcp (HTTP)",
+        "443/tcp (HTTPS)",
+        "514/udp (Syslog Ingest)"
+      ],
+      "activeDefenses": [
+        "FIM Sentinel Active",
+        "PAM Audit Engaged",
+        "Kernel Protection Active",
+        "CVE Scanner Synced"
+      ],
+      "eventsCount": 4,
+      "vulnsCount": 3,
+      "fimCount": 4,
+      "summary": "System security scan completed for gustavo-thinkpad-x1. Generated 4 security events, detected 3 vulnerabilities, and monitored 4 critical system files."
+    },
+    "registry": [
+      {
+        "keyPath": "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+        "valueName": "EyeOfHorusAgent",
+        "valueData": "C:\\Program Files\\EyeOfHorus\\agent.exe",
+        "valueType": "REG_SZ",
+        "status": "Clean"
+      },
+      {
+        "keyPath": "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce",
+        "valueName": "WinUpdateAssist",
+        "valueData": "C:\\Users\\Public\\svchost.exe --silent",
+        "valueType": "REG_SZ",
+        "status": "Suspicious Persistence (T1547.001)"
+      },
+      {
+        "keyPath": "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Lsa",
+        "valueName": "Security Packages",
+        "valueData": "kerberos, msv1_0, schannel, wdigest",
+        "valueType": "REG_MULTI_SZ",
+        "status": "Modified"
+      },
+      {
+        "keyPath": "HKLM\\SYSTEM\\CurrentControlSet\\Services\\WinDefend",
+        "valueName": "Start",
+        "valueData": "0x00000002 (Automatic)",
+        "valueType": "REG_DWORD",
+        "status": "Clean"
+      },
+      {
+        "keyPath": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders",
+        "valueName": "Startup",
+        "valueData": "%USERPROFILE%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup",
+        "valueType": "REG_EXPAND_SZ",
+        "status": "Clean"
+      },
+      {
+        "keyPath": "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows Defender",
+        "valueName": "DisableAntiSpyware",
+        "valueData": "0",
+        "valueType": "REG_DWORD",
+        "status": "Clean"
+      }
+    ]
+  }
+}

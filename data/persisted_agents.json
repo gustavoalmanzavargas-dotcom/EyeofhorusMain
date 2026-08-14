@@ -1,0 +1,46 @@
+[
+  {
+    "id": "004",
+    "name": "gustavo-thinkpad-x1",
+    "ip": "192.168.1.88",
+    "os": "Windows 11 Pro 64-bit (Build 22631)",
+    "version": "4.4.1",
+    "status": "Active",
+    "dateAdded": "2026-08-14",
+    "key": "eoh_reg_live_test",
+    "lastSeen": "2026-08-14T19:37:21.266Z"
+  },
+  {
+    "id": "001",
+    "name": "ubuntu-web-prod",
+    "ip": "192.168.1.100",
+    "os": "Ubuntu 22.04 LTS (Linux 5.15)",
+    "version": "4.4.1",
+    "status": "Active",
+    "dateAdded": "2026-08-01",
+    "key": "eoh_reg_prod_web01",
+    "lastSeen": "2026-08-14T19:37:17.240Z"
+  },
+  {
+    "id": "002",
+    "name": "win-dc-primary",
+    "ip": "192.168.1.10",
+    "os": "Windows Server 2022 Datacenter",
+    "version": "4.4.1",
+    "status": "Active",
+    "dateAdded": "2026-08-02",
+    "key": "eoh_reg_dc_prod02",
+    "lastSeen": "2026-08-14T19:37:17.240Z"
+  },
+  {
+    "id": "003",
+    "name": "macos-exec-sec",
+    "ip": "192.168.1.145",
+    "os": "macOS Sonoma 14.4 (Darwin 23.4)",
+    "version": "4.4.1",
+    "status": "Active",
+    "dateAdded": "2026-08-05",
+    "key": "eoh_reg_macos_03",
+    "lastSeen": "2026-08-14T19:37:17.240Z"
+  }
+]

@@ -36,7 +36,7 @@ import { HorusDataPlatformView } from './components/views/HorusDataPlatformView'
 import { HorusContentPacksView } from './components/views/HorusContentPacksView';
 
 import { api } from './services/api';
-import { auth, onAuthStateChanged, signOut } from './services/firebase';
+import { auth, onAuthStateChanged, signOut, subscribeToAgents } from './services/firebase';
 import { DashboardData } from './types';
 
 export default function App() {
@@ -188,6 +188,31 @@ export default function App() {
   useEffect(() => {
     if (currentUser) {
       reloadData();
+
+      // Real-time synchronization for security agents across laptop / home / cloud sessions
+      const unsubscribeAgents = subscribeToAgents((firestoreAgents) => {
+        if (firestoreAgents && firestoreAgents.length > 0) {
+          setData(prev => {
+            const currentAgents: any[] = prev.agents || [];
+            const agentMap = new Map<string, any>();
+            currentAgents.forEach(a => { if (a?.id) agentMap.set(String(a.id), a); });
+            firestoreAgents.forEach(f => {
+              if (f?.id) {
+                const id = String(f.id);
+                agentMap.set(id, { ...(agentMap.get(id) || {}), ...f });
+              }
+            });
+            return {
+              ...prev,
+              agents: Array.from(agentMap.values())
+            };
+          });
+        }
+      });
+
+      return () => {
+        if (unsubscribeAgents) unsubscribeAgents();
+      };
     }
   }, [currentUser, reloadData]);
 

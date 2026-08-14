@@ -2,6 +2,11 @@ import {
   DashboardData, Alert, Vulnerability, FimEvent, MitreItem, Agent, User, Role, Policy, InventoryData, IpLists,
   ScaPolicy, PersistentFoothold, RansomwareCanary, DnsQueryLog, ThreatIntelHash
 } from '../types';
+import { 
+  getAgentsFromFirestore, 
+  saveAgentToFirestore, 
+  deleteAgentFromFirestore 
+} from './firebase';
 
 const API_BASE = '/api';
 
@@ -89,29 +94,80 @@ export const api = {
 
   // Agents
   async getAgents(): Promise<Agent[]> {
-    return handleResponse<Agent[]>(await fetch(`${API_BASE}/agents`));
+    let serverAgents: Agent[] = [];
+    try {
+      serverAgents = await handleResponse<Agent[]>(await fetch(`${API_BASE}/agents`));
+    } catch (e) {
+      console.warn('Backend /api/agents unreachable, fallback:', e);
+    }
+
+    let firestoreAgents: any[] = [];
+    try {
+      firestoreAgents = await getAgentsFromFirestore();
+    } catch (e) {
+      console.warn('Firestore agents load notice:', e);
+    }
+
+    // Merge agents from server and Firestore by ID
+    const agentMap = new Map<string, Agent>();
+
+    for (const a of serverAgents) {
+      if (a && a.id) {
+        agentMap.set(String(a.id), a);
+      }
+    }
+
+    for (const f of firestoreAgents) {
+      if (f && f.id) {
+        const idStr = String(f.id);
+        const existing = agentMap.get(idStr);
+        if (!existing) {
+          const formatted: Agent = {
+            id: idStr,
+            name: f.name || `agent-${idStr}`,
+            ip: f.ip || '127.0.0.1',
+            os: f.os || 'Linux',
+            version: f.version || '4.4.1',
+            status: f.status || 'Active',
+            dateAdded: f.dateAdded || new Date().toISOString().split('T')[0],
+            key: f.key || 'eoh_reg_persisted'
+          };
+          agentMap.set(idStr, formatted);
+        } else {
+          agentMap.set(idStr, { ...existing, ...f });
+        }
+      }
+    }
+
+    return Array.from(agentMap.values());
   },
 
   async createAgent(agent: Partial<Agent>): Promise<Agent> {
-    return handleResponse<Agent>(await fetch(`${API_BASE}/agents`, {
+    const created = await handleResponse<Agent>(await fetch(`${API_BASE}/agents`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(agent)
     }));
+    await saveAgentToFirestore(created);
+    return created;
   },
 
   async updateAgent(id: string, updates: Partial<Agent>): Promise<Agent> {
-    return handleResponse<Agent>(await fetch(`${API_BASE}/agents/${id}`, {
+    const updated = await handleResponse<Agent>(await fetch(`${API_BASE}/agents/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updates)
     }));
+    await saveAgentToFirestore(updated);
+    return updated;
   },
 
   async deleteAgent(id: string) {
-    return handleResponse<{ success: boolean }>(await fetch(`${API_BASE}/agents/${id}`, {
+    const res = await handleResponse<{ success: boolean }>(await fetch(`${API_BASE}/agents/${id}`, {
       method: 'DELETE'
     }));
+    await deleteAgentFromFirestore(id);
+    return res;
   },
 
   async scanAgent(id: string) {

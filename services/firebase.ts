@@ -1,5 +1,16 @@
 import * as firebaseApp from 'firebase/app';
-import { getFirestore, setLogLevel } from 'firebase/firestore';
+import { 
+  getFirestore, 
+  setLogLevel, 
+  collection, 
+  doc, 
+  getDocs, 
+  getDoc, 
+  setDoc, 
+  deleteDoc, 
+  onSnapshot, 
+  getDocFromServer 
+} from 'firebase/firestore';
 import { 
   getAuth, 
   signInWithEmailAndPassword, 
@@ -64,6 +75,124 @@ export const db = firebaseConfigRaw.firestoreDatabaseId
 
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
+
+export enum OperationType {
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  LIST = 'list',
+  GET = 'get',
+  WRITE = 'write',
+}
+
+export interface FirestoreErrorInfo {
+  error: string;
+  operationType: OperationType;
+  path: string | null;
+  authInfo: {
+    userId?: string | null;
+    email?: string | null;
+    emailVerified?: boolean | null;
+    isAnonymous?: boolean | null;
+    tenantId?: string | null;
+    providerInfo?: {
+      providerId?: string | null;
+      email?: string | null;
+    }[];
+  };
+}
+
+export function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  const errInfo: FirestoreErrorInfo = {
+    error: error instanceof Error ? error.message : String(error),
+    authInfo: {
+      userId: auth.currentUser?.uid || null,
+      email: auth.currentUser?.email || null,
+      emailVerified: auth.currentUser?.emailVerified || null,
+      isAnonymous: auth.currentUser?.isAnonymous || null,
+      tenantId: auth.currentUser?.tenantId || null,
+      providerInfo: auth.currentUser?.providerData?.map(provider => ({
+        providerId: provider.providerId,
+        email: provider.email,
+      })) || []
+    },
+    operationType,
+    path
+  };
+  console.warn('Firestore Operation Notice: ', JSON.stringify(errInfo));
+  return errInfo;
+}
+
+// Validate connection to Firestore on boot
+export async function testConnection() {
+  try {
+    await getDocFromServer(doc(db, 'test', 'connection'));
+  } catch (error) {
+    if (error instanceof Error && error.message.includes('the client is offline')) {
+      console.warn("Please check your Firebase configuration.");
+    }
+  }
+}
+if (typeof window !== 'undefined') {
+  testConnection();
+}
+
+// Firestore Agent Persistence Helpers
+export async function getAgentsFromFirestore(): Promise<any[]> {
+  const path = 'agents';
+  try {
+    const snapshot = await getDocs(collection(db, path));
+    return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch (error) {
+    handleFirestoreError(error, OperationType.LIST, path);
+    return [];
+  }
+}
+
+export async function saveAgentToFirestore(agent: any): Promise<void> {
+  if (!agent || !agent.id) return;
+  const path = `agents/${agent.id}`;
+  try {
+    await setDoc(doc(db, 'agents', String(agent.id)), {
+      id: String(agent.id),
+      name: agent.name || 'Unnamed Agent',
+      ip: agent.ip || '127.0.0.1',
+      os: agent.os || 'Linux',
+      version: agent.version || '4.4.1',
+      status: agent.status || 'Active',
+      dateAdded: agent.dateAdded || new Date().toISOString().split('T')[0],
+      key: agent.key || '',
+      lastSeen: agent.lastSeen || new Date().toISOString(),
+      hostname: agent.hostname || agent.name || '',
+      updatedAt: new Date().toISOString()
+    }, { merge: true });
+  } catch (error) {
+    handleFirestoreError(error, OperationType.WRITE, path);
+  }
+}
+
+export async function deleteAgentFromFirestore(agentId: string): Promise<void> {
+  const path = `agents/${agentId}`;
+  try {
+    await deleteDoc(doc(db, 'agents', String(agentId)));
+  } catch (error) {
+    handleFirestoreError(error, OperationType.DELETE, path);
+  }
+}
+
+export function subscribeToAgents(callback: (agents: any[]) => void) {
+  const path = 'agents';
+  try {
+    return onSnapshot(collection(db, path), (snapshot) => {
+      const list = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      callback(list);
+    }, (error) => {
+      handleFirestoreError(error, OperationType.LIST, path);
+    });
+  } catch (e) {
+    return () => {};
+  }
+}
 
 export {
   signInWithEmailAndPassword,
