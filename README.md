@@ -1,3 +1,5 @@
+# Eye of Horus
+
 Proprietary software — active development. Eyeofhorus is not open source. Development/evaluation access does not grant production-use rights. A valid Eyeofhorus license is required for authorized production, commercial, or continued licensed use. See LICENSE.
 
 Eyeofhorus is a self-hosted cloud-console application. A fresh installation starts with an empty PostgreSQL-backed inventory; it does not load demonstration infrastructure.
