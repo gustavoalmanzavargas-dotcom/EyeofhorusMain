@@ -1,9 +1,12 @@
-# Eye of Horus — Unified Enterprise SIEM & XDR Platform
-**By Cyverax Security**
+Proprietary software — active development. Eyeofhorus is not open source. Development/evaluation access does not grant production-use rights. A valid Eyeofhorus license is required for authorized production, commercial, or continued licensed use. See LICENSE.
 
-Eye of Horus is an enterprise-grade AI-powered Extended Detection and Response (XDR) & Security Information and Event Management (SIEM) console designed for SMBs, MSSPs, and enterprise security operations centers (SOC).
+Eyeofhorus is a self-hosted cloud-console application. A fresh installation starts with an empty PostgreSQL-backed inventory; it does not load demonstration infrastructure.
 
----
+## Licensing
+
+Eyeofhorus is privately developed proprietary software. Source availability in this repository does **not** grant permission to copy, redistribute, modify, sublicense, resell, host for third parties, or deploy the software outside expressly authorized development/evaluation use.
+
+The current builds are for authorized development and testing. Production, commercial, enterprise, hosted-service, redistribution, and other operational use require a valid license or separate written authorization from the software owner.
 
 ## 🛡️ Core Capabilities
 
